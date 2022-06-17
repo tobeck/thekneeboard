@@ -1,8 +1,9 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
+import { prisma } from './db'
 
-const Home: NextPage = () => {
+const Home: NextPage = ({posts}) => {
   return (
     <div>
       <Head>
@@ -36,3 +37,14 @@ const Home: NextPage = () => {
 }
 
 export default Home
+
+export const getServerSideProps = async ({ req }) => {
+  const token = req.headers.AUTHORIZATION
+  const userId = await getUserId(token)
+  const posts = await prisma.post.findMany({
+    where: {
+      author: { id: userId },
+    },
+  })
+  return { props: { posts } }
+}
