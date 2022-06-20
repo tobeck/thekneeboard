@@ -1,50 +1,38 @@
 import type { NextPage } from 'next'
+import { signIn, useSession } from 'next-auth/react'
 import Head from 'next/head'
-import Image from 'next/image'
-import { prisma } from './db'
+import { prisma } from '../db/client'
 
-const Home: NextPage = ({posts}) => {
+const Home: NextPage = (props: any) => {
+  const { data: session, status } = useSession()
+
   return (
     <div>
       <Head>
         <title>TKB</title>
       </Head>
+      {!session && (
+        <>
+          <button onClick={() => signIn()}>Sign In</button>
+        </>
+      )}
 
-      <main>
-        <h1>
-          Welcome to The Kneeboard
-        </h1>
-
-        <p>
-          The purpose of the page is to create a resource page for flight simulator enthusiasts.
-        </p>
-      </main>
-
-      <footer>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <span>
-            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-          </span>
-        </a>
-      </footer>
+      {session && (
+        <>
+          <h4>You are signed in as: {session.user.name}</h4>
+        </>
+      )}
     </div>
   )
 }
 
 export default Home
 
-export const getServerSideProps = async ({ req }) => {
-  const token = req.headers.AUTHORIZATION
-  const userId = await getUserId(token)
-  const posts = await prisma.post.findMany({
-    where: {
-      author: { id: userId },
-    },
-  })
-  return { props: { posts } }
+export const getServerSideProps = async () => {
+  const aircrafts = await prisma.aircrafts.findMany()
+  return {
+    props: {
+      aircrafts: JSON.stringify(aircrafts),
+    }
+  }
 }
