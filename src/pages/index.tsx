@@ -17,7 +17,7 @@ const Home: NextPage = (props: any) => {
         </>
       )}
 
-      {session && (
+      {session?.user && (
         <>
           <h4>You are signed in as: {session.user.name}</h4>
         </>
