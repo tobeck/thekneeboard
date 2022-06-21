@@ -1,6 +1,7 @@
 import type { NextPage } from 'next'
 import { signIn, useSession } from 'next-auth/react'
 import Head from 'next/head'
+import Layout from '../components/layout'
 import { prisma } from '../db/client'
 import { trpc } from '../utils/trpc' 
 
@@ -15,25 +16,11 @@ const Home: NextPage = (props: any) => {
   }
 
   return (
-    <div>
+    <Layout>
       <Head>
         <title>TKB</title>
       </Head>
-      {!session && (
-        <>
-          <button onClick={() => signIn()}>Sign In</button>
-        </>
-      )}
-
-      {session?.user && (
-        <>
-          <h4>You are signed in as: {session.user.name}</h4>
-          <div>
-            <p>{hello.data.greeting}</p>
-          </div>
-        </>
-      )}
-    </div>
+    </Layout>
   )
 }
 
