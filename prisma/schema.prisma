@@ -2,28 +2,40 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["referentialIntegrity"]
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider             = "mysql"
+  url                  = env("DATABASE_URL")
   referentialIntegrity = "prisma"
 }
 
-model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
+model user {
+  id         Int     @id @default(autoincrement())
+  email      String  @unique
+  first_name String?
+  last_name  String?
+  wings      Int
+  modules    Int
+  games      Int
 }
 
-model Games {
+model wing {
   id    Int     @id @default(autoincrement())
   name  String?
+  users Int
 }
 
-model Aircrafts {
-  id    Int     @id @default(autoincrement())
-  name  String?
+model game {
+  id   Int     @id @default(autoincrement())
+  name String?
+}
+
+model module {
+  id   Int     @id @default(autoincrement())
+  name String?
+  type String?
+  game String?
 }
